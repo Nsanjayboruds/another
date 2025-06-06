@@ -4,7 +4,14 @@ import bcrypt from "bcryptjs"
 
 export const signUp = async (req, res) => {
   try {
-    const { name, email, password } = req.body
+    const name = req.body.name?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const password = req.body.password;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields are required!" });
+    }
+
 
     const existEmail = await User.findOne({ email })
     if (existEmail) {
@@ -39,7 +46,7 @@ export const Login = async (req, res) => {
     const {email, password } = req.body
 
     const user = await User.findOne({ email })
-    if (user) {
+    if (!user) {
       return res.status(400).json({ message: "Email doesnot exists!" })
     }
    
