@@ -8,10 +8,17 @@ import Home from './pages/Home'
 import Customize2 from './pages/Customize2'
 
 function App() {
-  const { userData } = useContext(userDataContext)
+  
+ const { userData, loading } = useContext(userDataContext)
+  console.log("userData in App.jsx:", userData);
+
+  if (loading) {
+    return <div className="text-white">Loading...</div>;
+  }
+
   return (
     <Routes>
-  <Route path='/' element={(userData?.assistantImage && userData?.assistantName)?<Customize/>:<Home/>} />
+  <Route path='/' element={(userData?.assistantImage && userData?.assistantName) ? <Home /> :<Navigate to="/customize"/>} />
   <Route path='/signup' element={!userData?<SignUp/> :<Navigate to="/customize"/>} />
   <Route path='/signin' element={!userData?<SignIn/> :<Navigate to="/" />} />
   <Route path='/customize' element={userData?<Customize/> :<Navigate to={'/signup'} />} />

@@ -10,6 +10,7 @@ function Customize2() {
     const navigate=useNavigate()
 
     const handleUpdateAssistant=async ()=>{
+      setloading(true)
         try {
             let formData=new FormData()
             formData.append("assistantName",assistantName)
@@ -19,10 +20,13 @@ function Customize2() {
                 formData.append("imageUrl",selectedImage)
             }
             const result=await axios.post(`${serverUrl}/api/user/update`,formData,{withCredentials:true})
+            setloading(false)
             console.log(result.data);
             setUserData(result.data)
+            navigate("/")
             
         } catch (error) {
+            setloading(false)
             console.log(error);
             
             
@@ -35,7 +39,7 @@ function Customize2() {
           <input type="text" placeholder='eg.shifra' className='w-full max-w-[600px] h-[60px] outline-none border-2 border-white bg-transparent text-white placeholder-gray-300 px-[20px] py-[10px]  rounded-full text-[18px]'required onChange={(e)=>setAssistantName(e.target.value)} value={assistantName} />
           {assistantName && <button className='min-w-[300px] h-[60px] mt-[30px] text-black font-semibold cursor-pointer bg-white rounded-full text-[19px]'disabled={loading} onClick={()=>{
             handleUpdateAssistant()
-            }}>{!loading?"Finally created your Assistant":"loading"}</button>}
+            }}>{!loading?"Finally created your Assistant":"loading..."}</button>}
           
     </div>
   )

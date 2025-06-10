@@ -1,21 +1,24 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
-const uploadOnCloudinary =async (filePath)=> {
-    cloudinary.config({ 
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME, // Click 'View API Keys' above to copy your Cloud name
-        api_key:process.env.CLOUDINARY_API_KEY, // Click 'View API Keys' above to copy your API key
-        api_secret:process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
-    });
 
-    try {
-       // Upload an image
-     const uploadResult = await cloudinary.uploader
-       .upload(filePath)
-       fs.unlinkSync(filePath) // Delete the file after upload
-       return uploadResult.secure_url; // Return the secure URL of the uploaded image
-    } catch (error) {
-        fs.unlinkSync(filePath) // Delete the file even if upload fails
-       return resizeBy.status(500).json({ message: "cloudinary error"});
+const uploadOnCloudinary = async (filePath) => {
+  cloudinary.config({ 
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+
+  try {
+    const uploadResult = await cloudinary.uploader.upload(filePath);
+    fs.unlinkSync(filePath); // Clean up local file
+    return uploadResult.secure_url; // ✅ Return secure URL
+  } catch (error) {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath); // Clean up even if it fails
     }
-}
-    export default uploadOnCloudinary;
+    console.error("Cloudinary upload failed:", error);
+    return null; // ❌ Return null or throw, depending on how you want to handle it
+  }
+};
+
+export default uploadOnCloudinary;
