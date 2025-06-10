@@ -3,7 +3,7 @@ import React, { createContext, useEffect, useState } from 'react'
 export const userDataContext =createContext()
 
 function UserContext({children}) {
-    const serverUrl="http://localhost:3000"
+    const serverUrl="https://virtualassistant-backend-n6xs.onrender.com"
     const[userData,setUserData]=useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
