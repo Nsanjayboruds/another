@@ -9,7 +9,7 @@ import Customize2 from './pages/Customize2'
 
 function App() {
   
- const { userData,setUserData, loading } = useContext(userDataContext)
+ const { userData, loading } = useContext(userDataContext)
   console.log("userData in App.jsx:", userData);
 
   if (loading) {
